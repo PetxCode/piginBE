@@ -54,14 +54,23 @@ const agreedDefined = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const getUser = yield userModel_1.default.findById(userID);
         const findWord = yield meaningModel_1.default.findById(wordID);
         if (getUser && findWord) {
-            const getWord = yield meaningModel_1.default.findByIdAndUpdate(wordID, {
-                agreed: [...findWord.agreed, userID],
-            }, { new: true });
-            return res.status(201).json({
-                message: "agreed update successfully",
-                data: getWord,
-                status: 201,
-            });
+            const check = findWord === null || findWord === void 0 ? void 0 : findWord.agreed.some((el) => el === userID);
+            if (check) {
+                return res.status(404).json({
+                    message: "You've already agreed to this definition",
+                    status: 404,
+                });
+            }
+            else {
+                const getWord = yield meaningModel_1.default.findByIdAndUpdate(wordID, {
+                    agreed: [...findWord.agreed, userID],
+                }, { new: true });
+                return res.status(201).json({
+                    message: "agreed update successfully",
+                    data: getWord,
+                    status: 201,
+                });
+            }
         }
         else {
             return res

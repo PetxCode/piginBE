@@ -46,19 +46,28 @@ export const agreedDefined = async (req: any, res: Response) => {
     const findWord: any = await meaningModel.findById(wordID);
 
     if (getUser && findWord) {
-      const getWord = await meaningModel.findByIdAndUpdate(
-        wordID,
-        {
-          agreed: [...findWord.agreed, userID],
-        },
-        { new: true }
-      );
+      const check = findWord?.agreed.some((el: any) => el === userID);
 
-      return res.status(201).json({
-        message: "agreed update successfully",
-        data: getWord,
-        status: 201,
-      });
+      if (check) {
+        return res.status(404).json({
+          message: "You've already agreed to this definition",
+          status: 404,
+        });
+      } else {
+        const getWord = await meaningModel.findByIdAndUpdate(
+          wordID,
+          {
+            agreed: [...findWord.agreed, userID],
+          },
+          { new: true }
+        );
+
+        return res.status(201).json({
+          message: "agreed update successfully",
+          data: getWord,
+          status: 201,
+        });
+      }
     } else {
       return res
         .status(400) // Changed to 400 for a more appropriate error status

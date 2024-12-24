@@ -21,9 +21,9 @@ interface iUser {
   bio: string;
   location: string;
 
-  friends: Array<string>;
-  followers: Array<string>;
-  followings: Array<string>;
+  friends: [];
+  followers: [];
+  followings: [];
 
   wordsAdded: Array<{}>;
 }

@@ -13,7 +13,7 @@ export const addAsFriend = async (
 
     if (!user && !friend) {
       return res.status(404).json({
-        message: "Error creating friend",
+        message: "Error ",
         status: 404,
       });
     } else {
@@ -29,28 +29,33 @@ export const addAsFriend = async (
           userID,
           {
             friends: [...user?.friends, friendID],
-            following: [...user?.following, friendID],
+            followings: [...user?.followings, friendID],
           },
           { new: true }
         );
+
+        // friend?.friends.push(userID);
+        // friend?.followers.push(userID);
 
         await userModel.findByIdAndUpdate(
           friendID,
           {
             friends: [...friend?.friends, userID],
-            follower: [...friend?.follower, userID],
+            followers: [...friend?.followers, userID],
           },
           { new: true }
         );
+
         return res.status(201).json({
           message: "Friend added successfully",
           status: 201,
         });
       }
     }
-  } catch (error) {
+  } catch (error: any) {
     return res.status(404).json({
       message: "Error creating friend",
+      data: error.message,
       status: 404,
     });
   }

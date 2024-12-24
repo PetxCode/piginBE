@@ -21,7 +21,7 @@ const addAsFriend = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const friend = yield userModel_1.default.findById(friendID);
         if (!user && !friend) {
             return res.status(404).json({
-                message: "Error creating friend",
+                message: "Error ",
                 status: 404,
             });
         }
@@ -36,11 +36,13 @@ const addAsFriend = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             else {
                 yield userModel_1.default.findByIdAndUpdate(userID, {
                     friends: [...user === null || user === void 0 ? void 0 : user.friends, friendID],
-                    following: [...user === null || user === void 0 ? void 0 : user.following, friendID],
+                    followings: [...user === null || user === void 0 ? void 0 : user.followings, friendID],
                 }, { new: true });
+                // friend?.friends.push(userID);
+                // friend?.followers.push(userID);
                 yield userModel_1.default.findByIdAndUpdate(friendID, {
                     friends: [...friend === null || friend === void 0 ? void 0 : friend.friends, userID],
-                    follower: [...friend === null || friend === void 0 ? void 0 : friend.follower, userID],
+                    followers: [...friend === null || friend === void 0 ? void 0 : friend.followers, userID],
                 }, { new: true });
                 return res.status(201).json({
                     message: "Friend added successfully",
@@ -52,6 +54,7 @@ const addAsFriend = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     catch (error) {
         return res.status(404).json({
             message: "Error creating friend",
+            data: error.message,
             status: 404,
         });
     }
